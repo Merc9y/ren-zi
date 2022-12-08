@@ -65,6 +65,7 @@ export default {
           break
         case 'edit':
           // 编辑操作
+          this.$emit('editdepts', this.treeNode)
           break
         case 'del':
           // 删除操作

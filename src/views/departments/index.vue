@@ -26,16 +26,23 @@
         -->
         <el-tree :data="list" :props="defaultProps" :default-expand-all="true">
           <tree-tools
+          ref="editDepts"
             slot-scope="{ data }"
             :tree-node="data"
             @del-dept="del"
             @add="add"
+            @editdepts="editdepts"
           ></tree-tools>
         </el-tree>
       </el-card>
     </div>
 
-    <add-dept :is-show="showDialog" @close="showDialog = false"></add-dept>
+    <add-dept
+    ref="qwer"
+    :is-show.sync="showDialog"
+    :tree-node="node"
+    @addDepts="getDepartments"
+    ></add-dept>
   </div>
 </template>
 
@@ -83,7 +90,8 @@ export default {
       },
       // 定义一个对象，将整个对象传递到头部的tree-tools组件中
       company: { name: '江苏传智播客教育科技股份有限公司', manager: '负责人' },
-      showDialog: false
+      showDialog: false,
+      node: {}
     }
   },
   created() {
@@ -97,7 +105,7 @@ export default {
       const res = await getDepartments()
       console.log(res)
       // 将一级的根数据进行赋值
-      this.company = { name: res.companyName, manager: res.companyManage }
+      this.company = { name: res.companyName, manager: res.companyManage, id: '' }
       // console.log(tranListToTreeData(res.depts, ''))
       this.list = tranListToTreeData(res.depts, '')
       console.log(this.list)
@@ -120,6 +128,13 @@ export default {
     add(node) {
       console.log(123)
       this.showDialog = true
+      this.node = node
+    },
+    editdepts(node) {
+      console.log(node)
+      this.showDialog = true
+      this.node = node
+      this.$refs.editref.getDepartDetail(node.id)
     }
   }
 }
